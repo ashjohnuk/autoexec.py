@@ -1,9 +1,9 @@
-import xbmc, time, os, xbmcgui, subprocess, stat, shutil
+import xbmc, time, os, xbmcgui, shutil
 
-ServerIP = "192.168.1.5" #add server or NAS ip address
-ServerUN = "USERNAME" #add remote username
-ServerPW = "PASSWORD" #add remote password
-ServerFI = ["Downloads","Kodi","Media"] #add remote folder names
+ServerIP = xbmcgui.Dialog().input('Enter the IP address of the server', type=xbmcgui.INPUT_IPADDRESS)
+ServerUN = xbmcgui.Dialog().input('Enter the username for server', type=xbmcgui.INPUT_ALPHANUM)
+ServerPW = xbmcgui.Dialog().input('Enter the password for server', type=xbmcgui.INPUT_ALPHANUM)
+ServerFI = ["Downloads","Kodi","Media"]
 
 def alert(title, msg): 
 	dialog = xbmcgui.Dialog()
@@ -11,18 +11,28 @@ def alert(title, msg):
 
 def popup(title, msg):
 	dialog = xbmcgui.Dialog()
-	dialog.notification(title, msg, xbmcgui.NOTIFICATION_INFO, 5000) #NOTIFICATION_INFO #NOTIFICATION_WARNING #NOTIFICATION_ERROR
+	time.sleep(3)
+	dialog.notification(title, msg, xbmcgui.NOTIFICATION_INFO, 5000)
 	time.sleep(3)
 
 def Epopup(title, msg):
 	dialog = xbmcgui.Dialog()
-	dialog.notification(title, msg, xbmcgui.NOTIFICATION_ERROR, 5000) #NOTIFICATION_INFO #NOTIFICATION_WARNING #NOTIFICATION_ERROR
+	time.sleep(3)
+	dialog.notification(title, msg, xbmcgui.NOTIFICATION_ERROR, 5000)
+	time.sleep(3)
+
+def Wpopup(title, msg):
+	dialog = xbmcgui.Dialog()
+	time.sleep(3)
+	dialog.notification(title, msg, xbmcgui.NOTIFICATION_WARNING, 5000)
 	time.sleep(3)
 
 def deleteDefault():
-	defaultList = ["/storage/tvshows","/storage/music","/storage/pictures","/storage/screenshots","/storage/videos"]
+	defaultList = ["/storage/tvshows","/storage/music","/storage/pictures","/storage/screenshots","/storage/videos","/storage/downloads","/storage/emulators","/storage/recordings"]
 	for x in defaultList:
-		if os.path.isdir(x): os.rmdir(x)
+		if os.path.isdir(x):
+			os.rmdir(x)
+			Wpopup("Deleted default folder",x)
 
 def rebootpopup(folder):
 	dialog = xbmcgui.Dialog()
@@ -50,12 +60,9 @@ def mountDrive(FOLDERS):
 				shutil.rmtree("/storage/"+x)
 				rebootpopup(x)
 
+
 if os.system("ping -c 1 "+ServerIP) == 0:
-	time.sleep(2)
 	deleteDefault()
-	time.sleep(2)
 	mountDrive(ServerFI)
 else:
-	alert("Unsuccessfull", "Unable to Find Server on "+ServerIP)
-	dialog = xbmcgui.Dialog()
-	d = dialog.input('Enter IP Address of server', type=xbmcgui.INPUT_IPADDRESS)
+	alert("Unsuccessfull", "Unable to find the server on "+ServerIP)
