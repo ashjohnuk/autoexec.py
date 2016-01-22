@@ -3,7 +3,7 @@ import xbmc, time, os, xbmcgui, shutil
 ServerIP = xbmcgui.Dialog().input('Enter the IP address of the server', type=xbmcgui.INPUT_IPADDRESS)
 ServerUN = xbmcgui.Dialog().input('Enter the username for server', type=xbmcgui.INPUT_ALPHANUM)
 ServerPW = xbmcgui.Dialog().input('Enter the password for server', type=xbmcgui.INPUT_ALPHANUM)
-ServerFI = ["Downloads","Kodi","Media"]
+ServerFI = ["Downloads","Kodi","Media"] #Enter the remote folders here...
 
 def alert(title, msg): 
 	dialog = xbmcgui.Dialog()
